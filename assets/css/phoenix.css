@@ -31,13 +31,13 @@ select {
 /* Phoenix promo and logo */
 .phx-hero {
   text-align: center;
-  border-bottom: 1px solid #e3e3e3;
-  background: #eee;
+  border: 1px solid #e3e3e3;
+  background: #fefefe;
   border-radius: 6px;
-  padding: 3em 3em 1em;
+  padding: 1em 1em 0em;
   margin-bottom: 3rem;
   font-weight: 200;
-  font-size: 120%;
+  font-size: 100%;
 }
 .phx-hero input {
   background: #ffffff;
@@ -95,7 +95,7 @@ header nav a {
     margin: 1rem;
   }
   .phx-logo {
-    flex-basis: 527px;
-    margin: 2rem 1rem;
+    flex-basis: 760px;
+    margin: 2rem 0rem;
   }
 }
