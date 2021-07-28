@@ -1,37 +1,31 @@
 <section class="phx-hero">
-  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
-  <p>Peace of mind from prototype to production</p>
+  <h1><%= gettext "Welcome to %{name}", name: "WHS" %></h1>
+  <p>- place where your goods keep well!</p>
 </section>
 
 <section class="row">
   <article class="column">
-    <h2>Resources</h2>
+    <h2>Storage:</h2>
     <ul>
       <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
+        <a href="/">All products</a>
       </li>
       <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
+        <a href="/">New product</a>
       </li>
       <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.5/CHANGELOG.md">v1.5 Changelog</a>
+        <a href="/">Reserve</a>
+      </li>
+      <li>
+        <a href="/">On balance</a>
       </li>
     </ul>
   </article>
   <article class="column">
-    <h2>Help</h2>
+    <h2>Logging actions:</h2>
     <ul>
       <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-      <li>
-        <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
+        <a href="/">Show all actions</a>
       </li>
     </ul>
   </article>
