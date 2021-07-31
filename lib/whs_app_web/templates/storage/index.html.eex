@@ -1,0 +1,26 @@
+<h1>All goods:</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Units in stock</th>
+      <th>Reserved</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for goods <- @goods do %>
+    <tr>
+      <td><%= goods.title %></td>
+      <td><%= goods.units_in_stock %></td>
+      <td><%= goods.reserved %></td>
+      <td><%= goods.active %></td>
+      <td></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Back", to: Routes.page_path(@conn, :index) %></span>
