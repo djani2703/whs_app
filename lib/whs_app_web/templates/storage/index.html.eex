@@ -1,0 +1,27 @@
+<h1>Storage:</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Title</th>
+      <th>Units in stock</th>
+      <th>Reserve</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for storage <- @storage do %>
+    <tr>
+      <td><%= storage.id %></td>
+      <td><%= storage.title %></td>
+      <td><%= storage.units_in_stock %></td>
+      <td><%= storage.reserve %></td>
+      <td><%= storage.active %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Back", to: Routes.page_path(@conn, :index) %></span>
