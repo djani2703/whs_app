@@ -1,0 +1,25 @@
+<h1>Show product:</h1>
+
+<ul>
+  <li>
+    <strong>Title:</strong>
+    <%= @goods.title %>
+  </li>
+
+  <li>
+    <strong>Units in stock:</strong>
+    <%= @goods.units_in_stock %>
+  </li>
+
+  <li>
+    <strong>Reserved:</strong>
+    <%= @goods.reserved %>
+  </li>
+
+  <li>
+    <strong>Active:</strong>
+    <%= @goods.active %>
+  </li>
+</ul>
+
+<span><%= link "Back", to: Routes.storage_path(@conn, :all_goods) %></span>

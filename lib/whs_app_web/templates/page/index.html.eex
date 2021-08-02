@@ -8,10 +8,10 @@
     <h2>Storage:</h2>
     <ul>
       <li>
-        <a href="<%= Routes.storage_path(@conn, :index) %>">All goods</a>
+        <a href="<%= Routes.storage_path(@conn, :all_goods) %>">All goods</a>
       </li>
       <li>
-        <a href="/">New good</a>
+        <a href="<%= Routes.storage_path(@conn, :new_product) %>">Add new good</a>
       </li>
       <li>
         <a href="/">On balance</a>

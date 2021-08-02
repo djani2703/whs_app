@@ -18,5 +18,6 @@ defmodule WhsApp.Operator.Storage do
     |> cast(attrs, [:title, :units_in_stock, :reserved, :active])
     |> validate_required([:title, :units_in_stock, :reserved, :active])
     |> unique_constraint(:title, name: :index_for_unique_title)
+    |> validate_number(:units_in_stock, greater_than_or_equal_to: 0)
   end
 end
