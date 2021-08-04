@@ -1,0 +1,11 @@
+<%= if @mark == "new" do %>
+    <h1>Add new good:</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :create_product)) %>
+<% end %>
+
+<%= if @mark == "add" do %>
+    <h1>Add amount of goods:</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :add_products), @goods) %>
+<% end %>
+
+<span><%= link "Back", to: Routes.storage_path(@conn, :all_products) %></span>

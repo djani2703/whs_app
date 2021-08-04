@@ -22,4 +22,4 @@
   </li>
 </ul>
 
-<span><%= link "Back", to: Routes.storage_path(@conn, :all_goods) %></span>
+<span><%= link "Back", to: Routes.storage_path(@conn, :all_products) %></span>

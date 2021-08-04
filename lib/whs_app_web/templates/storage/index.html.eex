@@ -18,7 +18,8 @@
       <td><%= goods.reserved %></td>
       <td><%= goods.active %></td>
       <td>
-        <span><%= link "Show", to: Routes.storage_path(@conn, :show_product, goods.id) %></span> |
+        <span><%= link "Show", to: Routes.storage_path(@conn, :show_product, goods) %></span> |
+        <span><%= link "Block", to: Routes.storage_path(@conn, :can_block_product?, goods) %></span> |
       </td>
     </tr>
 <% end %>

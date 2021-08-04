@@ -1,5 +1,0 @@
-<h1>Add new good:</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :create_product)) %>
-
-<span><%= link "Back", to: Routes.storage_path(@conn, :all_goods) %></span>

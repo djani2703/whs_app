@@ -8,7 +8,7 @@
     <h2>Storage:</h2>
     <ul>
       <li>
-        <a href="<%= Routes.storage_path(@conn, :all_goods) %>">All goods</a>
+        <a href="<%= Routes.storage_path(@conn, :all_products) %>">All goods</a>
       </li>
       <li>
         <a href="<%= Routes.storage_path(@conn, :new_product) %>">Add new good</a>

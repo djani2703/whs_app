@@ -25,6 +25,12 @@
     <%= error_tag f, :units_in_stock %>
   <% end %>
 
+  <%= if @mark == "block" do %>
+    <%= label f, :active %>
+    <%= checkbox f, :active %>
+    <%= error_tag f, :active %>
+  <% end %>
+
   <div>
     <%= submit "Save" %>
   </div>
