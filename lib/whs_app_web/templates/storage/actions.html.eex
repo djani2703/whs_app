@@ -3,9 +3,15 @@
     <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :create_product)) %>
 <% end %>
 
+<%= if @mark == "block" do %>
+    <h1>Block product:</h1>
+    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :block_product, @goods)) %>
+<% end %>
+
 <%= if @mark == "add" do %>
-    <h1>Add amount of goods:</h1>
-    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :add_products), @goods) %>
+    <h1>Add amount of product:</h1>
+    <h6>(<%= @goods.title %> - <%= @goods.units_in_stock %> in stock)</h6>
+    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :add_products, @goods)) %>
 <% end %>
 
 <span><%= link "Back", to: Routes.storage_path(@conn, :all_products) %></span>

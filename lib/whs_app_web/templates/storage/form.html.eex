@@ -31,6 +31,12 @@
     <%= error_tag f, :active %>
   <% end %>
 
+  <%= if @mark == "add" do %>
+    <%= label f, :add_amount %>
+    <%= number_input f, :add_amount %>
+    <%= error_tag f, :add_amount %>
+  <% end %>
+
   <div>
     <%= submit "Save" %>
   </div>
