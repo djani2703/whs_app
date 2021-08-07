@@ -8,10 +8,12 @@ defmodule WhsAppWeb.StorageController do
   @goods_blocked_msg "Product blocked successfully!"
   @goods_put_msg "Products added successfully!"
   @goods_take_msg "Products removed successfully!"
+  @goods_reserved_msg "Products reserved successfully!"
   @invalid_request_data "Invalid changing amount request data.."
   @invalid_input_data "Enter value for amount greater than 0."
   @a_lot_to_put "Large value to put products.."
   @a_lot_to_take "Large value to take products.."
+  @a_lot_to_reserve "Large value to reserve products.."
 
   def all_products(conn, _) do
     goods = Operator.get_all_goods()
@@ -62,6 +64,8 @@ defmodule WhsAppWeb.StorageController do
 
   def can_remove_products?(conn, %{"id" => id}), do: start_change_amount("remove", conn, id)
 
+  def can_reserve_products?(conn, %{"id" => id}), do: start_change_amount("reserve", conn, id)
+
   defp start_change_amount(mark, conn, id) do
     case Operator.get_goods!(id) do
       {:ok, goods} ->
@@ -85,6 +89,12 @@ defmodule WhsAppWeb.StorageController do
 
   def remove_products(conn, _), do: broadcast_msg!(conn, @invalid_request_data, :all_products)
 
+  def reserve_products(conn, %{"id" => id, "storage" => %{"reserve_amount" => rsv}}) do
+    valid_input_amount_data("reserve", conn, id, rsv)
+  end
+
+  def reserve_products(conn, _), do: broadcast_msg!(conn, @invalid_request_data, :all_products)
+
   defp valid_input_amount_data(mark, conn, id, data) do
     case Integer.parse(data) do
       {add, _} when add > 0 and mark == "add" ->
@@ -93,15 +103,18 @@ defmodule WhsAppWeb.StorageController do
       {rem, _} when rem > 0 and mark == "remove" ->
         take_products(conn, id, rem)
 
+      {rsv, _} when rsv > 0 and mark == "reserve" ->
+        save_products(conn, id, rsv)
+
       _ ->
         broadcast_msg!(conn, @invalid_input_data, :all_products)
     end
   end
 
   defp put_products(conn, id, add) do
-    {:ok, %{:units_in_stock => in_stock, :reserved => rsv} = goods} = Operator.get_goods!(id)
+    {:ok, %{:units_in_stock => in_stock, :reserved => rsvd} = goods} = Operator.get_goods!(id)
 
-    case in_stock + rsv + add < 100_000_000 do
+    case in_stock + rsvd + add < 100_000_000 do
       true ->
         params = %{:units_in_stock => in_stock + add, :active => true}
         update(conn, goods, params, @goods_put_msg, "add")
@@ -118,8 +131,22 @@ defmodule WhsAppWeb.StorageController do
       true ->
         params = %{:units_in_stock => in_stock - rem}
         update(conn, goods, params, @goods_take_msg, "remove")
+
       _ ->
         broadcast_msg!(conn, @a_lot_to_take, :all_products)
+    end
+  end
+
+  defp save_products(conn, id, rsv) do
+    {:ok, %{:units_in_stock => in_stock, :reserved => rsvd} = goods} = Operator.get_goods!(id)
+
+    case in_stock - rsv >= 0 and rsvd + rsv < 100_000_000 do
+      true ->
+        params = %{:units_in_stock => in_stock - rsv, :reserved => rsvd + rsv}
+        update(conn, goods, params, @goods_reserved_msg, "reserve")
+
+      _ ->
+        broadcast_msg!(conn, @a_lot_to_reserve, :all_products)
     end
   end
 

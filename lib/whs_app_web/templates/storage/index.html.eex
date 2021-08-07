@@ -22,6 +22,7 @@
         <span><%= link "Blk", to: Routes.storage_path(@conn, :can_block_product?, goods) %></span> |
         <span><%= link "Add", to: Routes.storage_path(@conn, :can_add_products?, goods) %></span> |
         <span><%= link "Rem", to: Routes.storage_path(@conn, :can_remove_products?, goods) %></span> |
+        <span><%= link "Rsv", to: Routes.storage_path(@conn, :can_reserve_products?, goods) %></span>
       </td>
     </tr>
 <% end %>

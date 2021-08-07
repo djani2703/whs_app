@@ -43,6 +43,12 @@
     <%= error_tag f, :remove_amount %>
   <% end %>
 
+  <%= if @mark == "reserve" do %>
+    <%= label f, :reserve_amount %>
+    <%= number_input f, :reserve_amount %>
+    <%= error_tag f, :reserve_amount %>
+  <% end %>
+
   <div>
     <%= submit "Save" %>
   </div>
