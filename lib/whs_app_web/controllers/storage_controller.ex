@@ -7,9 +7,11 @@ defmodule WhsAppWeb.StorageController do
   @goods_added_msg "New good added successfully!"
   @goods_blocked_msg "Product blocked successfully!"
   @goods_put_msg "Products added successfully!"
+  @goods_take_msg "Products removed successfully!"
   @invalid_request_data "Invalid changing amount request data.."
   @invalid_input_data "Enter value for amount greater than 0."
-  @a_lot_to_put "Large amount value to put.."
+  @a_lot_to_put "Large value to put products.."
+  @a_lot_to_take "Large value to take products.."
 
   def all_products(conn, _) do
     goods = Operator.get_all_goods()
@@ -58,6 +60,8 @@ defmodule WhsAppWeb.StorageController do
 
   def can_add_products?(conn, %{"id" => id}), do: start_change_amount("add", conn, id)
 
+  def can_remove_products?(conn, %{"id" => id}), do: start_change_amount("remove", conn, id)
+
   defp start_change_amount(mark, conn, id) do
     case Operator.get_goods!(id) do
       {:ok, goods} ->
@@ -75,10 +79,19 @@ defmodule WhsAppWeb.StorageController do
 
   def add_products(conn, _), do: broadcast_msg!(conn, @invalid_request_data, :all_products)
 
+  def remove_products(conn, %{"id" => id, "storage" => %{"remove_amount" => rem}}) do
+    valid_input_amount_data("remove", conn, id, rem)
+  end
+
+  def remove_products(conn, _), do: broadcast_msg!(conn, @invalid_request_data, :all_products)
+
   defp valid_input_amount_data(mark, conn, id, data) do
     case Integer.parse(data) do
       {add, _} when add > 0 and mark == "add" ->
         put_products(conn, id, add)
+
+      {rem, _} when rem > 0 and mark == "remove" ->
+        take_products(conn, id, rem)
 
       _ ->
         broadcast_msg!(conn, @invalid_input_data, :all_products)
@@ -95,6 +108,18 @@ defmodule WhsAppWeb.StorageController do
 
       _ ->
         broadcast_msg!(conn, @a_lot_to_put, :all_products)
+    end
+  end
+
+  defp take_products(conn, id, rem) do
+    {:ok, %{:units_in_stock => in_stock} = goods} = Operator.get_goods!(id)
+
+    case in_stock - rem >= 0 do
+      true ->
+        params = %{:units_in_stock => in_stock - rem}
+        update(conn, goods, params, @goods_take_msg, "remove")
+      _ ->
+        broadcast_msg!(conn, @a_lot_to_take, :all_products)
     end
   end
 

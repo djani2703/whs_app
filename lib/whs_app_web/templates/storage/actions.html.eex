@@ -14,4 +14,10 @@
     <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :add_products, @goods)) %>
 <% end %>
 
+<%= if @mark == "remove" do %>
+    <h1>Remove amount of product:</h1>
+    <h6>(<%= @goods.title %> - <%= @goods.units_in_stock %> in stock)</h6>
+    <%= render "form.html", Map.put(assigns, :action, Routes.storage_path(@conn, :remove_products, @goods)) %>
+<% end %>
+
 <span><%= link "Back", to: Routes.storage_path(@conn, :all_products) %></span>

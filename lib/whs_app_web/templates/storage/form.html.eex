@@ -37,6 +37,12 @@
     <%= error_tag f, :add_amount %>
   <% end %>
 
+  <%= if @mark == "remove" do %>
+    <%= label f, :remove_amount %>
+    <%= number_input f, :remove_amount %>
+    <%= error_tag f, :remove_amount %>
+  <% end %>
+
   <div>
     <%= submit "Save" %>
   </div>

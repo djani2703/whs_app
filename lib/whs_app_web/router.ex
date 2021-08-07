@@ -23,10 +23,12 @@ defmodule WhsAppWeb.Router do
     get "/storage/:id", StorageController, :show_product
     get "/storage/block/:id", StorageController, :can_block_product?
     get "/storage/add/:id", StorageController, :can_add_products?
+    get "/storage/remove/:id", StorageController, :can_remove_products?
 
     post "/storage", StorageController, :create_product
     put "/storage/:id/block", StorageController, :block_product
     put "/storage/:id/add", StorageController, :add_products
+    put "/storage/:id/remove", StorageController, :remove_products
   end
 
   # Other scopes may use custom stacks.
