@@ -1,0 +1,26 @@
+<h1>All operations:</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Operation</th>
+      <th>Amount</th>
+      <th>Id</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for operation <- @operations do %>
+    <tr>
+      <td><%= operation.title %></td>
+      <td><%= operation.operation %></td>
+      <td><%= operation.amount %></td>
+      <td><%= operation.goods_id %></td>
+      <td></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "Main", to: Routes.page_path(@conn, :index) %></span>

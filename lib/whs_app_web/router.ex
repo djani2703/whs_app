@@ -18,6 +18,8 @@ defmodule WhsAppWeb.Router do
 
     get "/", PageController, :index
 
+    get "/storage/operations", OperationsController, :all_operations
+
     get "/storage", StorageController, :all_products
     get "/storage/new", StorageController, :new_product
     get "/storage/on_balance", StorageController, :balance_products

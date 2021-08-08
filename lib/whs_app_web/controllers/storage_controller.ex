@@ -32,7 +32,8 @@ defmodule WhsAppWeb.StorageController do
 
   def create_product(conn, %{"storage" => params}) do
     case Operator.add_new_good(params) do
-      {:ok, %Storage{:id => id}} ->
+      {:ok, %Storage{:id => id} = goods} ->
+        Operator.add_operation_note(goods, 0, "new")
         broadcast_msg!(conn, @goods_added_msg, :show_product, id)
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -53,7 +54,7 @@ defmodule WhsAppWeb.StorageController do
   def can_block_product?(conn, %{"id" => id}) do
     case Operator.can_block_goods?(id) do
       {true, goods} ->
-        update(conn, goods, %{:active => false}, @goods_blocked_msg, "block")
+        update(conn, goods, %{:active => false}, @goods_blocked_msg, 0, "block")
 
       {false, msg} ->
         broadcast_msg!(conn, msg, :all_products)
@@ -62,7 +63,7 @@ defmodule WhsAppWeb.StorageController do
 
   def block_product(conn, %{"id" => id, "storage" => params}) do
     {:ok, goods} = Operator.get_goods!(id)
-    update(conn, goods, params, @goods_blocked_msg, "block")
+    update(conn, goods, params, @goods_blocked_msg, 0, "block")
   end
 
   def can_add_products?(conn, %{"id" => id}), do: start_change_amount("add", conn, id)
@@ -122,7 +123,7 @@ defmodule WhsAppWeb.StorageController do
     case in_stock + rsvd + add < 100_000_000 do
       true ->
         params = %{:units_in_stock => in_stock + add, :active => true}
-        update(conn, goods, params, @goods_put_msg, "add")
+        update(conn, goods, params, @goods_put_msg, add, "add")
 
       _ ->
         broadcast_msg!(conn, @a_lot_to_put, :all_products)
@@ -135,7 +136,7 @@ defmodule WhsAppWeb.StorageController do
     case in_stock - rem >= 0 do
       true ->
         params = %{:units_in_stock => in_stock - rem}
-        update(conn, goods, params, @goods_take_msg, "remove")
+        update(conn, goods, params, @goods_take_msg, rem, "remove")
 
       _ ->
         broadcast_msg!(conn, @a_lot_to_take, :all_products)
@@ -148,16 +149,17 @@ defmodule WhsAppWeb.StorageController do
     case in_stock - rsv >= 0 and rsvd + rsv < 100_000_000 do
       true ->
         params = %{:units_in_stock => in_stock - rsv, :reserved => rsvd + rsv}
-        update(conn, goods, params, @goods_reserved_msg, "reserve")
+        update(conn, goods, params, @goods_reserved_msg, rsv, "reserve")
 
       _ ->
         broadcast_msg!(conn, @a_lot_to_reserve, :all_products)
     end
   end
 
-  defp update(conn, goods, params, msg, mark) do
+  defp update(conn, goods, params, msg, amount, mark) do
     case Operator.update_goods(goods, params) do
       {:ok, goods} ->
+        Operator.add_operation_note(goods, amount, mark)
         broadcast_msg!(conn, msg, :show_product, goods)
 
       {:error, %Ecto.Changeset{} = changeset} ->

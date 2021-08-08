@@ -1,8 +1,9 @@
 defmodule WhsApp.Operator do
   import Ecto.Query, warn: false
-  alias WhsApp.Repo
 
+  alias WhsApp.Repo
   alias WhsApp.Operator.Storage
+  alias WhsApp.Operation
 
   @goods_not_found_msg "Product not found.."
   @goods_have_in_stock_msg "Cannot block product: have in stock.."
@@ -58,5 +59,11 @@ defmodule WhsApp.Operator do
     goods
     |> Storage.changeset(attrs)
     |> Repo.update()
+  end
+
+  def add_operation_note(%{:id => id, :title => title}, amount, operation) do
+    Operation.add_operation(
+      %{goods_id: id, title: title, operation: operation, amount: amount}
+    )
   end
 end

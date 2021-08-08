@@ -22,7 +22,7 @@
     <h2>Logging actions:</h2>
     <ul>
       <li>
-        <a href="/">Show all actions</a>
+        <a href="<%= Routes.operations_path(@conn, :all_operations) %>">Show all actions</a>
       </li>
     </ul>
   </article>
