@@ -17,7 +17,12 @@ defmodule WhsAppWeb.StorageController do
 
   def all_products(conn, _) do
     goods = Operator.get_all_goods()
-    render(conn, "index.html", goods: goods)
+    render(conn, "index.html", goods: goods, mark: "all")
+  end
+
+  def balance_products(conn, _) do
+    goods = Operator.get_balance_goods()
+    render(conn, "index.html", goods: goods, mark: "balance")
   end
 
   def new_product(conn, _) do

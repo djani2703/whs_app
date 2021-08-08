@@ -8,8 +8,15 @@ defmodule WhsApp.Operator do
   @goods_have_in_stock_msg "Cannot block product: have in stock.."
   @goods_already_blocked_msg "Cannot block product: already blocked.."
 
-  def get_all_goods() do
-    Repo.all(Storage)
+  def get_all_goods(query \\ Storage) do
+    Repo.all(query)
+  end
+
+  def get_balance_goods() do
+    get_all_goods(
+      from s in Storage,
+        where: s.units_in_stock > 0 or s.reserved > 0
+    )
   end
 
   def add_new_good(storage_params) do

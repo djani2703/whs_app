@@ -20,12 +20,12 @@ defmodule WhsAppWeb.Router do
 
     get "/storage", StorageController, :all_products
     get "/storage/new", StorageController, :new_product
+    get "/storage/on_balance", StorageController, :balance_products
     get "/storage/:id", StorageController, :show_product
     get "/storage/block/:id", StorageController, :can_block_product?
     get "/storage/add/:id", StorageController, :can_add_products?
     get "/storage/remove/:id", StorageController, :can_remove_products?
     get "/storage/reserve/:id", StorageController, :can_reserve_products?
-
 
     post "/storage", StorageController, :create_product
     put "/storage/:id/block", StorageController, :block_product

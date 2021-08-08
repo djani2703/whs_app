@@ -14,7 +14,7 @@
         <a href="<%= Routes.storage_path(@conn, :new_product) %>">Add new good</a>
       </li>
       <li>
-        <a href="/">On balance</a>
+        <a href="<%= Routes.storage_path(@conn, :balance_products) %>">On balance</a>
       </li>
     </ul>
   </article>
