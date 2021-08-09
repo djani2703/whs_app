@@ -33,7 +33,13 @@
   </tbody>
 </table>
 
-<span><%= link "Main", to: Routes.page_path(@conn, :index) %></span> |
-<span><%= link "All goods", to: Routes.storage_path(@conn, :all_products) %></span> |
-<span><%= link "Add new good", to: Routes.storage_path(@conn, :new_product) %></span> |
-<span><%= link "On balance", to: Routes.storage_path(@conn, :balance_products) %></span>
+<span><%= link "Main", to: Routes.page_path(@conn, :main_page) %></span> |
+
+<%= if @mark == "all" do %>
+  <span><%= link "On balance", to: Routes.storage_path(@conn, :balance_products) %></span> |
+<% else %>
+  <span><%= link "All goods", to: Routes.storage_path(@conn, :all_products) %></span> |
+<% end %>
+
+<span><%= link "New good", to: Routes.storage_path(@conn, :new_product) %></span> |
+<span><%= link "All actions", to: Routes.operations_path(@conn, :all_operations) %></span>

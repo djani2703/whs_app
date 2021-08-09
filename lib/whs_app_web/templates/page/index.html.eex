@@ -11,7 +11,7 @@
         <a href="<%= Routes.storage_path(@conn, :all_products) %>">All goods</a>
       </li>
       <li>
-        <a href="<%= Routes.storage_path(@conn, :new_product) %>">Add new good</a>
+        <a href="<%= Routes.storage_path(@conn, :new_product) %>">New good</a>
       </li>
       <li>
         <a href="<%= Routes.storage_path(@conn, :balance_products) %>">On balance</a>
@@ -22,7 +22,7 @@
     <h2>Logging actions:</h2>
     <ul>
       <li>
-        <a href="<%= Routes.operations_path(@conn, :all_operations) %>">Show all actions</a>
+        <a href="<%= Routes.operations_path(@conn, :all_operations) %>">All actions</a>
       </li>
     </ul>
   </article>

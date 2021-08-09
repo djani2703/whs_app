@@ -16,7 +16,7 @@ defmodule WhsAppWeb.Router do
   scope "/", WhsAppWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", PageController, :main_page
 
     get "/storage/operations", OperationsController, :all_operations
 
@@ -40,9 +40,9 @@ defmodule WhsAppWeb.Router do
   scope "/api", WhsAppWeb do
     pipe_through :api
 
-    get "/balance", StorageController, :balance_products_api
-    get "/balance/:id", StorageController, :balance_product_api
-    get "/reserve/:id/:amount", StorageController, :reserve_product_api
+    get "/balance", StorageController, :api_balance_products
+    get "/balance/:id", StorageController, :api_balance_product
+    get "/reserve/:id/:amount", StorageController, :api_reserve_product
   end
 
   # Enables LiveDashboard only for development

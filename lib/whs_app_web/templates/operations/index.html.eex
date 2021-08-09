@@ -1,4 +1,9 @@
-<h1>All operations:</h1>
+<h1>All actions:</h1>
+
+<span><%= link "Main", to: Routes.page_path(@conn, :main_page) %></span> |
+<span><%= link "All goods", to: Routes.storage_path(@conn, :all_products) %></span> |
+<span><%= link "On balance", to: Routes.storage_path(@conn, :balance_products) %></span> |
+<span><%= link "New good", to: Routes.storage_path(@conn, :new_product) %></span>
 
 <table>
   <thead>
@@ -6,7 +11,7 @@
       <th>Title</th>
       <th>Operation</th>
       <th>Amount</th>
-      <th>Id</th>
+      <th>Action datetime</th>
       <th></th>
     </tr>
   </thead>
@@ -16,11 +21,9 @@
       <td><%= operation.title %></td>
       <td><%= operation.operation %></td>
       <td><%= operation.amount %></td>
-      <td><%= operation.goods_id %></td>
+      <td><%= operation.inserted_at %></td>
       <td></td>
     </tr>
 <% end %>
   </tbody>
 </table>
-
-<span><%= link "Main", to: Routes.page_path(@conn, :index) %></span>

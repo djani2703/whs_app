@@ -11,7 +11,7 @@
   <body>
     <header>
       <section class="container">
-        <a href="<%= Routes.page_path(@conn, :index) %>" class="phx-logo">
+        <a href="<%= Routes.page_path(@conn, :main_page) %>" class="phx-logo">
           <img src="<%= Routes.static_path(@conn, "/images/whs-logo.png") %>" alt="WHS Application Logo"/>
         </a>
       </section>

@@ -4,8 +4,11 @@ defmodule WhsApp.Operation do
   alias WhsApp.Repo
   alias WhsApp.Operator.Operations
 
-  def get_all_operations(query \\ Operations) do
-    Repo.all(query)
+  def get_all_operations() do
+    Repo.all(
+      from o in Operations,
+        order_by: [desc: o.inserted_at]
+    )
   end
 
   def add_operation(operation_params) do
