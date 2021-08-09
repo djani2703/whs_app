@@ -178,4 +178,20 @@ defmodule WhsAppWeb.StorageController do
     |> put_flash(:info, msg)
     |> redirect(to: Routes.storage_path(conn, route, data))
   end
+
+  # API's:
+  def balance_products_api(conn, _) do
+    goods = Operator.get_balance_goods()
+    render(conn, "balance_all.json", goods: goods)
+  end
+
+  def balance_product_api(conn, %{"id" => id}) do
+    case Operator.get_goods!(id) do
+      {:ok, goods} ->
+        render(conn, "balance_one.json", goods: goods)
+
+      {:error, msg} ->
+        render(conn, "error.json", msg: msg)
+    end
+  end
 end

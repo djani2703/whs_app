@@ -37,9 +37,12 @@ defmodule WhsAppWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", WhsAppWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", WhsAppWeb do
+    pipe_through :api
+
+    get "/balance", StorageController, :balance_products_api
+    get "/balance/:id", StorageController, :balance_product_api
+  end
 
   # Enables LiveDashboard only for development
   #
