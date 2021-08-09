@@ -9,6 +9,7 @@ defmodule WhsAppWeb.StorageController do
   @goods_put_msg "Products added successfully!"
   @goods_take_msg "Products removed successfully!"
   @goods_reserved_msg "Products reserved successfully!"
+  @goods_not_updated_msg "Product not updated.."
   @invalid_request_data "Invalid changing amount request data.."
   @invalid_input_data "Enter value for amount greater than 0."
   @a_lot_to_put "Large value to put products.."
@@ -99,9 +100,13 @@ defmodule WhsAppWeb.StorageController do
     valid_input_amount_data("reserve", conn, id, rsv)
   end
 
+  def reserve_products(conn, %{"id" => id, "amount" => amount}) do
+    valid_input_amount_data("reserve", conn, id, amount, true)
+  end
+
   def reserve_products(conn, _), do: broadcast_msg!(conn, @invalid_request_data, :all_products)
 
-  defp valid_input_amount_data(mark, conn, id, data) do
+  defp valid_input_amount_data(mark, conn, id, data, api \\ nil) do
     case Integer.parse(data) do
       {add, _} when add > 0 and mark == "add" ->
         put_products(conn, id, add)
@@ -109,8 +114,14 @@ defmodule WhsAppWeb.StorageController do
       {rem, _} when rem > 0 and mark == "remove" ->
         take_products(conn, id, rem)
 
+      {rsv, _} when api and rsv > 0 and mark == "reserve" ->
+        save_products(conn, id, rsv, api)
+
       {rsv, _} when rsv > 0 and mark == "reserve" ->
         save_products(conn, id, rsv)
+
+      _ when api ->
+        render(conn, "error.json", msg: @invalid_input_data)
 
       _ ->
         broadcast_msg!(conn, @invalid_input_data, :all_products)
@@ -143,24 +154,38 @@ defmodule WhsAppWeb.StorageController do
     end
   end
 
-  defp save_products(conn, id, rsv) do
+  defp save_products(conn, id, rsv, api \\ nil) do
     {:ok, %{:units_in_stock => in_stock, :reserved => rsvd} = goods} = Operator.get_goods!(id)
 
     case in_stock - rsv >= 0 and rsvd + rsv < 100_000_000 do
+      true when api ->
+        params = %{:units_in_stock => in_stock - rsv, :reserved => rsvd + rsv}
+        update(conn, goods, params, @goods_reserved_msg, rsv, "reserve", api)
+
       true ->
         params = %{:units_in_stock => in_stock - rsv, :reserved => rsvd + rsv}
         update(conn, goods, params, @goods_reserved_msg, rsv, "reserve")
+
+      _ when api ->
+        render(conn, "error.json", msg: @a_lot_to_reserve)
 
       _ ->
         broadcast_msg!(conn, @a_lot_to_reserve, :all_products)
     end
   end
 
-  defp update(conn, goods, params, msg, amount, mark) do
+  defp update(conn, goods, params, msg, amount, mark, api \\ nil) do
     case Operator.update_goods(goods, params) do
+      {:ok, goods} when api ->
+        Operator.add_operation_note(goods, amount, mark)
+        render(conn, "reserve.json", goods: goods)
+
       {:ok, goods} ->
         Operator.add_operation_note(goods, amount, mark)
         broadcast_msg!(conn, msg, :show_product, goods)
+
+      {:error, _} when api ->
+        render(conn, "error.json", msg: @goods_not_updated_msg)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "actions.html", goods: goods, changeset: changeset, mark: mark)
@@ -189,6 +214,16 @@ defmodule WhsAppWeb.StorageController do
     case Operator.get_goods!(id) do
       {:ok, goods} ->
         render(conn, "balance_one.json", goods: goods)
+
+      {:error, msg} ->
+        render(conn, "error.json", msg: msg)
+    end
+  end
+
+  def reserve_product_api(conn, %{"id" => id} = params) do
+    case Operator.get_goods!(id) do
+      {:ok, _} ->
+        reserve_products(conn, params)
 
       {:error, msg} ->
         render(conn, "error.json", msg: msg)
