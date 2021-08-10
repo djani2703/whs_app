@@ -20,6 +20,10 @@ defmodule WhsAppWeb.StorageController do
   @a_lot_to_unreserve "Large value to unreserve products.."
 
   # WEB:
+  def not_found(conn, _) do
+    render(conn, "not_found.html", mark: "not_found")
+  end
+
   def all_products(conn, _) do
     goods = Operator.get_all_goods()
     render(conn, "index.html", goods: goods, mark: "all")

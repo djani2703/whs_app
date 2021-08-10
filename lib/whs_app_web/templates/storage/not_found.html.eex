@@ -1,0 +1,7 @@
+<h1>Page not found..</h1>
+
+<span><%= link "Main", to: Routes.page_path(@conn, :main_page) %></span> |
+<span><%= link "All goods", to: Routes.storage_path(@conn, :all_products) %></span> |
+<span><%= link "On balance", to: Routes.storage_path(@conn, :balance_products) %></span> |
+<span><%= link "New good", to: Routes.storage_path(@conn, :new_product) %></span> |
+<span><%= link "All actions", to: Routes.operations_path(@conn, :all_operations) %></span>

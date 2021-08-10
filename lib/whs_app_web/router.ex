@@ -36,7 +36,6 @@ defmodule WhsAppWeb.Router do
     put "/storage/:id/reserve", StorageController, :reserve_products
   end
 
-  # Other scopes may use custom stacks.
   scope "/api", WhsAppWeb do
     pipe_through :api
 
@@ -60,5 +59,12 @@ defmodule WhsAppWeb.Router do
       pipe_through :browser
       live_dashboard "/dashboard", metrics: WhsAppWeb.Telemetry
     end
+  end
+
+  # Scope for undefined routes
+  scope "/", WhsAppWeb do
+    pipe_through :browser
+
+    get "/*undefined_routes", StorageController, :not_found
   end
 end
