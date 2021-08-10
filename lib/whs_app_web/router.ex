@@ -43,6 +43,7 @@ defmodule WhsAppWeb.Router do
     get "/balance", StorageController, :api_balance_products
     get "/balance/:id", StorageController, :api_balance_product
     get "/reserve/:id/:amount", StorageController, :api_reserve_product
+    get "/unreserve/:id/:amount", StorageController, :api_unreserve_product
   end
 
   # Enables LiveDashboard only for development

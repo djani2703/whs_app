@@ -29,6 +29,7 @@ The following APIs have been implemented:
 1) Get leftovers from the warehouse. Path: /api/balance
 2) Get leftovers for a specific product. Path: /api/balance/:uuid
 3) Reserve the number of products. Path: /api/reserve/:uuid/:amount
+4) Unreserve the number of products. Path: /api/unreserve/:uuid/:amount 
 
 where uuid - universally unique identifier, amount - quantity of item.
 

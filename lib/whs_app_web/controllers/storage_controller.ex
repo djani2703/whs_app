@@ -17,6 +17,7 @@ defmodule WhsAppWeb.StorageController do
   @a_lot_to_put "Large value to put products.."
   @a_lot_to_take "Large value to take products.."
   @a_lot_to_reserve "Large value to reserve products.."
+  @a_lot_to_unreserve "Large value to unreserve products.."
 
   # WEB:
   def all_products(conn, _) do
@@ -215,6 +216,10 @@ defmodule WhsAppWeb.StorageController do
     api_product_exists?("reserve", conn, params)
   end
 
+  def api_unreserve_product(conn, params) do
+    api_product_exists?("unreserve", conn, params)
+  end
+
   defp api_product_exists?(mark, conn, %{"id" => id} = params) do
     case Operator.get_goods!(id) do
       {:ok, goods} when mark == "balance" ->
@@ -223,19 +228,29 @@ defmodule WhsAppWeb.StorageController do
       {:ok, _} when mark == "reserve" ->
         api_reserve_products(conn, params)
 
+      {:ok, _} when mark == "unreserve" ->
+        api_unreserve_products(conn, params)
+
       {:error, msg} ->
         render(conn, "error.json", msg: msg)
     end
   end
 
-  def api_reserve_products(conn, %{"id" => id, "amount" => amount}) do
+  defp api_reserve_products(conn, %{"id" => id, "amount" => amount}) do
     api_valid_input_amount_data("reserve", conn, id, amount)
+  end
+
+  defp api_unreserve_products(conn, %{"id" => id, "amount" => amount}) do
+    api_valid_input_amount_data("unreserve", conn, id, amount)
   end
 
   defp api_valid_input_amount_data(mark, conn, id, data) do
     case Integer.parse(data) do
       {rsv, _} when rsv > 0 and mark == "reserve" ->
         api_save_products(conn, id, rsv)
+
+      {ursv, _} when ursv > 0 and mark == "unreserve" ->
+        api_extract_products(conn, id, ursv)
 
       _ ->
         render(conn, "error.json", msg: @invalid_input_data)
@@ -252,6 +267,19 @@ defmodule WhsAppWeb.StorageController do
 
       _ ->
         render(conn, "error.json", msg: @a_lot_to_reserve)
+    end
+  end
+
+  defp api_extract_products(conn, id, ursv) do
+    {:ok, %{:units_in_stock => in_stock, :reserved => rsvd} = goods} = Operator.get_goods!(id)
+
+    case in_stock + ursv < 100_000_000 and rsvd - ursv >= 0 do
+      true ->
+        params = %{:units_in_stock => in_stock + ursv, :reserved => rsvd - ursv}
+        api_update(conn, goods, params, ursv, "unreserve")
+
+      _ ->
+        render(conn, "error.json", msg: @a_lot_to_unreserve)
     end
   end
 
