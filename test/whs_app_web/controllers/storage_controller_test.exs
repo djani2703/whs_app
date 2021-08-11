@@ -92,12 +92,6 @@ defmodule WhsAppWeb.StorageControllerTest do
     assert html_response(conn, 200) =~ "Cannot block product: already blocked.."
   end
 
-  test "block_product with incorrect params returns a form to change active value", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = put(conn, Routes.storage_path(conn, :block_product, goods), storage: @incorrect_attrs)
-    assert html_response(conn, 200) =~ "Block product:"
-  end
-
   test "can_add_products? with correct params returns products added msg", %{conn: conn} do
     goods = test_goods(@correct_attrs)
     conn = get(conn, Routes.storage_path(conn, :can_add_products?, goods.id))
@@ -133,7 +127,7 @@ defmodule WhsAppWeb.StorageControllerTest do
     goods = test_goods(@correct_attrs)
     conn = put(conn, Routes.storage_path(conn, :add_products, goods))
     assert redirected_to(conn) == Routes.storage_path(conn, :all_products)
-    assert get_flash(conn, "info") == "Invalid changing amount request data.."
+    assert get_flash(conn, "info") == "Invalid amount request data.."
   end
 
   test "can_remove_products? with correct params returns products removed msg", %{conn: conn} do
@@ -160,65 +154,5 @@ defmodule WhsAppWeb.StorageControllerTest do
 
     assert redirected_to(conn) == Routes.storage_path(conn, :show_product, goods.id)
     assert get_flash(conn, "info") == "Products reserved successfully!"
-  end
-
-  test "api_balance_products returns all products on balance", %{conn: conn} do
-    conn = get(conn, Routes.storage_path(conn, :api_balance_products))
-    assert json_response(conn, 200)["ok"] == []
-  end
-
-  test "api_balance_product returns product on balance by id", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = get(conn, Routes.storage_path(conn, :api_balance_product, goods.id))
-
-    assert json_response(conn, 200)["ok"] == %{
-             "title" => "Elixir in action",
-             "units_in_stock" => 10,
-             "reserved" => 5
-           }
-  end
-
-  test "api_balance_product with incorrect id returns error message", %{conn: conn} do
-    conn = get(conn, Routes.storage_path(conn, :api_balance_product, :incorrect_id))
-    assert json_response(conn, 200)["error"] == "Product not found.."
-  end
-
-  test "api_reserve_product returns reserved product message", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = get(conn, Routes.storage_path(conn, :api_reserve_product, goods.id, 5))
-
-    assert json_response(conn, 200)["ok"] == %{
-             "title" => "Elixir in action",
-             "units_in_stock" => 5,
-             "reserved" => 10
-           }
-  end
-
-  test "api_reserve_product with incorrect id returns error message", %{conn: conn} do
-    conn = get(conn, Routes.storage_path(conn, :api_reserve_product, :incorrect_id, 15))
-    assert json_response(conn, 200)["error"] == "Product not found.."
-  end
-
-  test "api_reserve_product with large amount returns error message", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = get(conn, Routes.storage_path(conn, :api_reserve_product, goods.id, 15))
-    assert json_response(conn, 200)["error"] == "Large value to reserve products.."
-  end
-
-  test "api_reserve_product with small amount returns error message", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = get(conn, Routes.storage_path(conn, :api_reserve_product, goods.id, 0))
-    assert json_response(conn, 200)["error"] == "Enter value for amount greater than 0."
-  end
-
-  test "api_unreserve_product returns unreserved product message", %{conn: conn} do
-    goods = test_goods(@correct_attrs)
-    conn = get(conn, Routes.storage_path(conn, :api_unreserve_product, goods.id, 5))
-
-    assert json_response(conn, 200)["ok"] == %{
-             "title" => "Elixir in action",
-             "units_in_stock" => 15,
-             "reserved" => 0
-           }
   end
 end

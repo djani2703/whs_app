@@ -2,6 +2,8 @@ defmodule WhsApp.Operator.Storage do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias WhsApp.Operator.Operations
+
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "storage" do
@@ -9,6 +11,7 @@ defmodule WhsApp.Operator.Storage do
     field :units_in_stock, :integer, default: 0, null: false
     field :reserved, :integer, default: 0, null: false
     field :active, :boolean, default: true, null: false
+    has_many :operations, Operations, foreign_key: :goods_id
 
     timestamps()
   end
